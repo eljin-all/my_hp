@@ -1,17 +1,115 @@
-# project_hp
+# ❤️ My HP – цифровой счётчик здоровья
 
-A new Flutter project.
+Медицинское приложение на Flutter с **3D-моделями систем организма**, которое
+рассчитывает уровень здоровья пользователя (HP) на основе возраста, веса, роста,
+выбранных заболеваний, травм и физической активности.
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+## ✨ Возможности
 
-A few resources to get you started if this is your first Flutter project:
+- Регистрация с указанием пола, возраста, роста и веса  
+- Автоматический расчёт **максимального HP** с учётом возраста и ИМТ  
+- **14 систем организма** (сердечно-сосудистая, нервная, пищеварительная и др.)  
+  с 3D-моделями (`.glb`) и тремя состояниями: `good`, `mid`, `bad`  
+- Выбор заболеваний, травм и активностей с гибкой настройкой параметров  
+  (стадия онкологии, количество зубов, интенсивность травмы и т.д.)  
+- Интерактивный график изменения HP (**неделя / месяц / год**)  
+- Экстренный звонок при падении HP ниже критического порога + диалог подтверждения  
+- Экран смерти в стиле **Dark Souls** (*YOU DIED*)  
+- Анимированное появление 3D-моделей, списков и переходов между вкладками  
+- Поиск по болезням, травмам и системам  
+- Валидация вводимых параметров (возраст 1–120, рост ≥50 см, вес ≥10 кг) 
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+---
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠 Технический стек
+
+| Компонент      | Решение                        |
+| :------------- | :----------------------------- |
+| Фреймворк      | **Flutter** 3.24               |
+| Управление состоянием | **Riverpod** 2.5      |
+| Сохранение данных     | **SharedPreferences**  |
+| 3D-модели      | **model_viewer_plus** 1.8      |
+| Телефонные звонки    | **url_launcher** 6.2.5 |
+| Стиль          | **Material 3** (light theme)   |
+| Поиск и сортировка   | Custom implementation |
+| Анимации       | `AnimationController`, `TweenAnimationBuilder` |
+
+---
+
+## 🏗 Архитектура
+
+Проект построен на **Clean Architecture Lite**:
+
+```
+lib/
+├── models/          # Бизнес-сущности (Disease, UserModel, HealthState)
+├── providers/       # Riverpod‑провайдеры для каждой логической части
+├── screens/         # Экраны приложения (HomeTab, ProfileScreen, SystemViewScreen и др.)
+├── services/        # Бизнес-логика (расчёт HP, экстренные вызовы, работа с БД)
+├── state/           # Глобальное состояние (ModelState для систем)
+├── theme/           # Конфигурация светлой темы
+├── utils/           # Вспомогательные виджеты (слайдер‑диалог)
+├── widgets/         # Переиспользуемые UI‑компоненты (HealthCard, график, навигация)
+└── main.dart        # Точка входа
+```
+
+Провайдеры разделены на независимые модули (справочники, параметры пользователя,
+история HP), что облегчает тестирование и дальнейшее расширение.
+
+---
+
+
+## 🚀 Быстрый старт
+
+### 1. Клонируйте репозиторий
+
+```bash
+git clone https://github.com/eljin-all/my_hp.git
+cd my_hp
+```
+
+### 2. Установите зависимости
+
+```bash
+flutter pub get
+```
+
+### 3. Сгенерируйте Riverpod‑код
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+### 4. Запустите приложение
+
+```bash
+flutter run
+```
+
+Для сборки APK:
+
+```bash
+flutter build apk --release --split-per-abi
+```
+
+---
+
+## 📂 Структура ассетов
+
+```
+assets/
+├── databases/
+│   ├── diseases.csv      # Список болезней
+│   ├── traumas.csv       # Список травм
+│   └── activities.csv    # Список активностей
+├── systems/
+│   ├── cardiovascular_system/
+│   │   └── model.glb     # 3D‑модель с вариантами good/mid/bad
+│   ├── ...
+└── ui/
+    └── voxel_heart.png   # Иконка для HealthCard
+```
+
+---
