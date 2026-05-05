@@ -1,0 +1,22 @@
+# Flutter
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+
+# Android
+android/app/build/
+android/.gradle/
+android/local.properties
+*.jks
+key.properties
+
+# IDE
+.idea/
+.vscode/
+
+
+# Secrets
+*.env
+secrets/

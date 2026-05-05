@@ -1,0 +1,46 @@
+name: project_hp
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  shimmer: ^3.0.0
+  riverpod_annotation: ^2.3.5
+  url_launcher: ^6.2.5
+  flutter_riverpod: ^2.5.1
+  shared_preferences: ^2.2.2
+  cupertino_icons: ^1.0.8
+  model_viewer_plus: ^1.7.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  build_runner: ^2.4.9
+  riverpod_generator: ^2.4.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/ui/voxel_heart.png
+    - assets/databases/
+    - assets/systems/cardiovascular_system/
+    - assets/systems/digestive_system/
+    - assets/systems/endocrine_system/
+    - assets/systems/genitourinary_system_female/
+    - assets/systems/genitourinary_system_male/
+    - assets/systems/immune_system/
+    - assets/systems/infections/
+    - assets/systems/musculoskeletal_system/
+    - assets/systems/nervous_system/
+    - assets/systems/oncology/
+    - assets/systems/oral_cavity/
+    - assets/systems/skin/
+    - assets/systems/respiratory_system/
+    - assets/systems/vision_and_hearing/
