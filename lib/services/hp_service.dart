@@ -1,21 +1,6 @@
-// services/hp_service.dart
 import '../models/disease.dart';
 
 class HpService {
-  // ─────────────────────────────────────────────────────────────────────────────
-  // Приватные вспомогательные методы
-  // ─────────────────────────────────────────────────────────────────────────────
-
-  static int _calculateAge(DateTime birthDate) {
-    final now = DateTime.now();
-    int age = now.year - birthDate.year;
-    if (now.month < birthDate.month ||
-        (now.month == birthDate.month && now.day < birthDate.day)) {
-      age--;
-    }
-    return age;
-  }
-
   static int _getBaseHpByAge(int age) {
     if (age <= 12) return 70;
     if (age <= 17) return 90;
@@ -25,13 +10,8 @@ class HpService {
     return 70;
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // Публичные методы расчёта максимального HP и дебаффов
-  // ─────────────────────────────────────────────────────────────────────────────
-
   static int calculateMaxHp(user) {
-    final age = _calculateAge(user.birthDate);
-    int baseHp = _getBaseHpByAge(age);
+    int baseHp = _getBaseHpByAge(user.age);
     final heightM = user.height / 100;
     final bmi = user.weight / (heightM * heightM);
     if (bmi < 18.5 || bmi > 24.9) {
@@ -41,8 +21,7 @@ class HpService {
   }
 
   static int getImtDebuff(user) {
-    final age = _calculateAge(user.birthDate);
-    int baseHp = _getBaseHpByAge(age);
+    int baseHp = _getBaseHpByAge(user.age);
     final heightM = user.height / 100;
     final bmi = user.weight / (heightM * heightM);
     if (bmi < 18.5 || bmi > 24.9) {
@@ -52,14 +31,9 @@ class HpService {
   }
 
   static int getAgeDebuff(user) {
-    final age = _calculateAge(user.birthDate);
-    final baseHp = _getBaseHpByAge(age);
+    final baseHp = _getBaseHpByAge(user.age);
     return 100 - baseHp;
   }
-
-  // ─────────────────────────────────────────────────────────────────────────────
-  // Публичные методы расчёта эффектов (используются в HealthCard)
-  // ─────────────────────────────────────────────────────────────────────────────
 
   static double calculateDiseaseEffect(Disease d, double param) {
     double factor;
@@ -90,10 +64,6 @@ class HpService {
     return plusHp * (param / 7);
   }
 
-  // ─────────────────────────────────────────────────────────────────────────────
-  // Применение всех эффектов к текущему HP
-  // ─────────────────────────────────────────────────────────────────────────────
-
   static int applyEffects(
       int maxHp,
       dynamic user,
@@ -123,5 +93,4 @@ class HpService {
     if (hp > maxHp) hp = maxHp.toDouble();
     return hp.round();
   }
-
 }

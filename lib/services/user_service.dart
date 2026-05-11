@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/user_model.dart';
 
 class UserService {
-  static const _keyBirth = 'birth';
+  static const _keyAge = 'age';
   static const _keyHeight = 'height';
   static const _keyWeight = 'weight';
   static const _keyGender = 'gender';
@@ -133,7 +133,7 @@ class UserService {
 
   static Future<void> saveUser(UserModel user) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_keyBirth, user.birthDate.toIso8601String());
+    await prefs.setInt(_keyAge, user.age);
     await prefs.setDouble(_keyHeight, user.height);
     await prefs.setDouble(_keyWeight, user.weight);
     await prefs.setString(_keyGender, user.gender);
@@ -161,15 +161,15 @@ class UserService {
 
   static Future<UserModel?> getUser() async {
     final prefs = await SharedPreferences.getInstance();
-    final birth = prefs.getString(_keyBirth);
+    final age = prefs.getInt(_keyAge);
     final height = prefs.getDouble(_keyHeight);
     final weight = prefs.getDouble(_keyWeight);
     final gender = prefs.getString(_keyGender) ?? 'male';
-    if (birth == null || height == null || weight == null) {
+    if (age == null || height == null || weight == null) {
       return null;
     }
     return UserModel(
-      birthDate: DateTime.parse(birth),
+      age: age,
       height: height,
       weight: weight,
       gender: gender,

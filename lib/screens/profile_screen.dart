@@ -35,8 +35,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _loadData() async {
     final user = await UserService.getUser();
     if (user != null) {
-      final age = _calculateAge(user.birthDate);
-      ageController.text = age.toString();
+      ageController.text = user.age.toString();
       heightController.text = user.height.toStringAsFixed(0);
       weightController.text = user.weight.toStringAsFixed(1);
       gender = user.gender;
@@ -51,21 +50,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     setState(() {});
   }
 
-  int _calculateAge(DateTime birthDate) {
-    final now = DateTime.now();
-    int age = now.year - birthDate.year;
-    if (now.month < birthDate.month ||
-        (now.month == birthDate.month && now.day < birthDate.day)) {
-      age--;
-    }
-    return age;
-  }
-
   void save() async {
     final user = await UserService.getUser();
     if (user == null) return;
 
-    // Валидация возраста, роста, веса
     final ageText = ageController.text.trim();
     final heightText = heightController.text.trim();
     final weightText = weightController.text.trim();
@@ -87,15 +75,6 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       return;
     }
 
-    // Валидация критического порога
-    final thresholdText = thresholdController.text.trim();
-    final threshold = int.tryParse(thresholdText);
-    if (threshold == null || threshold < 0 || threshold > 50) {
-      _showError('Критический порог должен быть от 0 до 50');
-      return;
-    }
-
-    // Валидация номера телефона
     if (callAmbulance && phoneController.text.trim().isEmpty) {
       _showError('Введите номер больницы для экстренного звонка');
       return;
@@ -105,14 +84,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       return;
     }
 
-    final today = DateTime.now();
-    DateTime birthDate = DateTime(today.year - age, today.month, today.day);
-    if (birthDate.isAfter(today)) {
-      birthDate = DateTime(today.year - age - 1, today.month, today.day);
+    final thresholdText = thresholdController.text.trim();
+    final threshold = int.tryParse(thresholdText);
+    if (threshold == null || threshold < 0 || threshold > 50) {
+      _showError('Критический порог должен быть от 0 до 50');
+      return;
     }
 
     final updated = UserModel(
-      birthDate: birthDate,
+      age: age,
       height: height,
       weight: weight,
       gender: gender,
@@ -166,9 +146,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ],
                     selected: {gender},
                     onSelectionChanged: (Set<String> newSelection) {
-                      setState(() {
-                        gender = newSelection.first;
-                      });
+                      setState(() { gender = newSelection.first; });
                     },
                   ),
                   const SizedBox(height: 20),
@@ -198,31 +176,19 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       border: OutlineInputBorder(),
                     ),
                   ),
-                  Text(
-                    "Текущее максимальное HP: $maxHp",
-                    style: const TextStyle(fontSize: 16),
-                  ),
+                  Text("Текущее максимальное HP: $maxHp", style: const TextStyle(fontSize: 16)),
                   const SizedBox(height: 12),
                   const Divider(),
-                  const Text(
-                    "Настройки экстренной помощи",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
+                  const Text("Настройки экстренной помощи", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 12),
                   SwitchListTile(
                     title: const Text("Звонить в больницу при критическом HP?"),
                     subtitle: callAmbulance && phoneController.text.trim().isEmpty
-                        ? Text(
-                      'Необходимо ввести номер телефона',
-                      style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12),
-                    )
+                        ? Text('Необходимо ввести номер телефона',
+                        style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 12))
                         : null,
                     value: callAmbulance,
-                    onChanged: (value) {
-                      setState(() {
-                        callAmbulance = value;
-                      });
-                    },
+                    onChanged: (value) => setState(() { callAmbulance = value; }),
                     contentPadding: EdgeInsets.zero,
                   ),
                   const SizedBox(height: 8),
@@ -253,9 +219,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               onPressed: save,
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size.fromHeight(50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: const Text("Сохранить изменения", style: TextStyle(fontSize: 18)),
             ),

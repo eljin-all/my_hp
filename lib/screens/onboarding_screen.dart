@@ -56,10 +56,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   void _submitUser(int age, double height, double weight) async {
-    final birthDate = DateTime.now().subtract(Duration(days: age * 365));
-
     final user = UserModel(
-      birthDate: birthDate,
+      age: age,
       height: height,
       weight: weight,
       gender: gender,
